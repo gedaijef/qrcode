@@ -17,6 +17,11 @@ body {
 
 h1 {
     font-weight: 600;
+    background-color: #9ed1e7;
+    border-radius: .9rem;
+    padding-block: .5rem;
+    padding-inline: 1rem;
+    display: inline-block;
 }
 
 p {
