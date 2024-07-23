@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidatos ausentes</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+        * {
+            font-family: 'Inter', sans-serif;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            height: 100vh;
+            background-color: #F2F3F9;
+        }
+
+        #container-overflow {
+            height: 100%;
+            display: flex;
+            justify-content: center
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            align-self: center;
+            text-align: center;
+        }
+
+        caption {
+            font-size: 1.3em;
+            font-weight: bolder;
+            padding-block: 1.2rem;
+            color: #001489;
+        }
+
+        caption>div {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        h1 {
+            font-size: 1.2rem;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: .2rem;
+        }
+
+        a {
+            background-color: #CCD0E7;
+            color: #000;
+            text-decoration: none;
+            padding-inline: 1rem;
+            padding-block: .3rem;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            transition: .4s;
+            cursor: pointer;
+        }
+
+        a:hover {
+            background-color: #8089C4;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f1f1f1;
+        }
+
+        th {
+            background-color: #4C5AAC;
+            color: white;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        tr {
+            background-color: white;
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+        @media screen and (min-width: 992px) and (max-width: 1200px) {
+            h1 {
+                font-size: 1rem;
+            }
+
+            a {
+                padding-inline: .7rem;
+                padding-block: .2rem;
+                font-size: .9rem;
+            }
+
+            th {
+                font-size: .9rem;
+            }
+
+            tbody {
+                font-size: .8rem;
+            }
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 992px) {
+            h1 {
+                font-size: .9rem;
+            }
+
+            a {
+                padding-inline: .6rem;
+                padding-block: .2rem;
+                font-size: .8rem;
+            }
+
+            th {
+                font-size: .8rem;
+            }
+
+            tbody {
+                font-size: .7rem;
+            }
+        }
+
+        @media screen and (min-width: 600px) and (max-width: 768px) {
+            caption>div {
+                align-items: center;
+            }
+
+            nav {
+                align-items: normal;
+                gap: .4rem;
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: .8rem;
+            }
+
+            a {
+                padding-inline: .6rem;
+                padding-block: .2rem;
+                font-size: .7rem;
+            }
+
+            th {
+                font-size: .7rem;
+            }
+
+            tbody {
+                font-size: .6rem;
+            }
+
+        }
+
+        @media screen and (max-width: 600px) {
+            #container-overflow {
+                overflow-x: auto;
+            }
+
+            table {
+                width: 100%;
+            }
+
+            caption>div {
+                gap: .5rem;
+                align-items: normal;
+                flex-direction: column;
+            }
+
+            nav {
+                justify-content: space-evenly;
+                gap: .4rem;
+            }
+
+            h1 {
+                font-size: .8rem;
+            }
+
+            a {
+                padding-inline: .6rem;
+                padding-block: .2rem;
+                font-size: .7rem;
+            }
+
+            th {
+                font-size: .7rem;
+            }
+
+            tbody {
+                font-size: .6rem;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="container-overflow">
+        <table>
+            <caption>
+                <div>
+                    <h1>Informações dos candidatos ausentes</h1>
+                    <nav>
+                        <a href="presentes" target="_self">Conhecer candidatos presentes</a>
+                        <a href="/" target="_self">Voltar</a>
+                    </nav>
+                </div>
+            </caption>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Inscrição</th>
+                    <th>Turma</th>
+                    <th>Periodo</th>
+                    <th>Sala</th>
+                    <th>Professor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% ausentes.forEach(function(row) { %>
+                    <tr>
+                        <td>
+                            <%= row.nome %>
+                        </td>
+                        <td>
+                            <%= row.nr_inscricao %>
+                        </td>
+                        <td>
+                            <%= row.turma %>
+                        </td>
+                        <td>
+                            <%= row.periodo %>
+                        </td>
+                        <td>
+                            <%= row.sala %>
+                        </td>
+                        <td>
+                            <%= row.professor %>
+                        </td>
+                        <% }); %>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
