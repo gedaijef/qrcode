@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leitor de QR Code</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script> <!-- Biblioteca jsQR para leitura de QR Code -->
+  </head>
+  <body>
+    <canvas id="canvas" hidden></canvas> <!-- Canvas oculto para processar a imagem do vídeo -->
+    <div>
+      <video id="video" width="100%" height="500px" style="border: 1px solid black"></video> <!-- Elemento de vídeo para mostrar o feed da câmera -->
+      <p id="aviso">Aperte no botão para ativar a câmera novamente!</p> <!-- Aviso para o usuário -->
+    </div>
+    <p id="result"></p> <!-- Elemento para exibir o resultado do QR Code -->
+    <select id="cameraSelect"></select> <!-- Menu de seleção de câmeras -->
+    <button id="startButton">Abrir Câmera</button> <!-- Botão para iniciar a câmera -->
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background-color: #fdfdfd;
+        color: #333;
+        height: 100vh;
+        padding: 1rem;
+      }
+
+      div {
+        position: relative;
+      }
+
+      #aviso {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        color: white;
+        transform: translate(-50%, -50%);
+      }
+
+      p {
+        margin-block: 1rem;
+        font-size: 1rem;
+      }
+
+      button {
+        outline: none;
+        border: none;
+        background-color: #9ed1e7;
+        border-radius: 0.9rem;
+        padding-block: 0.5rem;
+        padding-inline: 1rem;
+        font-weight: 450;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      button:hover {
+        background-color: #87b4c7;
+      }
+
+      @media only screen and (max-width: 450px) {
+        h1 {
+          font-size: 1rem;
+        }
+
+        p {
+          font-size: 0.8rem;
+        }
+
+        button {
+          font-size: 0.8rem;
+        }
+      }
+
+      @media only screen and (max-width: 200px) {
+        h1 {
+          font-size: 0.7rem;
+        }
+
+        button {
+          font-size: 0.6rem;
+        }
+      }
+    </style>
+
+    <script>
+      const aviso = document.getElementById("aviso"); // Elemento de aviso
+      const video = document.getElementById("video"); // Elemento de vídeo
+      const canvasElement = document.getElementById("canvas"); // Elemento de canvas
+      const canvas = canvasElement.getContext("2d"); // Contexto do canvas
+      const result = document.getElementById("result"); // Elemento para exibir o resultado
+      const cameraSelect = document.getElementById("cameraSelect"); // Menu de seleção de câmeras
+      let currentStream; // Stream de vídeo atual
+      let lastCode = ""; // Armazenar o último código QR lido
+
+      document.getElementById("startButton").addEventListener("click", async function () {
+        const selectedDeviceId = cameraSelect.value; // ID da câmera selecionada
+        await startCamera(selectedDeviceId); // Iniciar a câmera
+        requestAnimationFrame(tick); // Iniciar a função de captura de frames
+      });
+
+      function tick() {
+        if (video.readyState === video.HAVE_ENOUGH_DATA) { // Verificar se o vídeo está pronto
+          canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height); // Desenhar o frame do vídeo no canvas
+          const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height); // Capturar os dados da imagem do canvas
+          let code = jsQR(imageData.data, imageData.width, imageData.height, {
+            inversionAttempts: "dontInvert",
+          }); // Ler o QR Code
+
+          if (code && code.data !== lastCode) { // Se um QR Code for detectado e for diferente do último lido
+            result.innerText = `Código QR detectado: ${code.data}`; // Exibir o QR Code detectado
+            let nr_inscricao = code.data.split("/").pop().split(".")[0]; // Extrair o número de inscrição do QR Code
+            let data_presenca = new Date(); // Capturar a data atual
+            let hora = data_presenca.toTimeString().split(" ")[0]; // Capturar a hora atual
+            enviarDados(nr_inscricao, data_presenca, hora); // Enviar os dados para o servidor
+            window.open(code.data); // Abrir o link do QR Code
+            lastCode = code.data; // Atualizar o último código lido
+            stopCamera(); // Parar a câmera
+            aviso.style.display = "block"; // Mostrar o aviso
+          } else {
+            result.innerText = "Nenhum QR Code detectado."; // Exibir mensagem de nenhum QR Code detectado
+          }
+        }
+        requestAnimationFrame(tick); // Continuar capturando frames
+      }
+
+      function enviarDados(num, dt, h) {
+        fetch("https://camera-1n2b.onrender.com/salvar", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            nr_inscricao: num,
+            data_presenca: dt,
+            hora: h,
+          }),
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data); // Exibir sucesso no console
+        })
+        .catch((error) => {
+          console.log("Error:", error); // Exibir erro no console
+        });
+      }
+
+      async function getCameras() {
+        const devices = await navigator.mediaDevices.enumerateDevices(); // Listar dispositivos de mídia
+        const videoDevices = devices.filter((device) => device.kind === "videoinput"); // Filtrar apenas dispositivos de vídeo
+        cameraSelect.innerHTML = ""; // Limpar o menu de seleção de câmeras
+
+        let backCameraIndex = 0;
+
+        videoDevices.forEach((device, index) => {
+          const option = document.createElement("option"); // Criar uma opção para cada câmera
+          option.value = device.deviceId; // Definir o ID do dispositivo
+          option.text = device.label || `Camera ${cameraSelect.length + 1}`; // Definir o nome da câmera
+          cameraSelect.appendChild(option); // Adicionar a opção ao menu
+
+          if (device.label.toLowerCase().includes("traseira") || device.label.toLowerCase().includes("back")) {
+            backCameraIndex = index; // Encontrar a câmera traseira
+          }
+        });
+
+        cameraSelect.selectedIndex = backCameraIndex; // Selecionar a câmera traseira como padrão
+        return videoDevices; // Retornar os dispositivos de vídeo
+      }
+
+      async function startCamera(deviceId) {
+        stopCamera(); // Parar qualquer câmera em execução
+
+        const constraints = {
+          video: {
+            deviceId: deviceId ? { exact: deviceId } : undefined, // Definir a câmera a ser usada
+          },
+        };
+        currentStream = await navigator.mediaDevices.getUserMedia(constraints); // Solicitar acesso à câmera
+        video.srcObject = currentStream; // Definir o stream de vídeo no elemento de vídeo
+        video.setAttribute("playsinline", true); // Ajustar atributo para compatibilidade
+        video.play(); // Iniciar a reprodução do vídeo
+        aviso.style.display = "none"; // Ocultar o aviso
+      }
+
+      function stopCamera() {
+        if (currentStream) { // Se houver um stream ativo
+          currentStream.getTracks().forEach((track) => track.stop()); // Parar todas as faixas do stream
+          currentStream = null; // Limpar o stream atual
+        }
+      }
+
+      getCameras(); // Obter e listar as câmeras disponíveis ao carregar a página
+    </script>
+  </body>
+</html>
