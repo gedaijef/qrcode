@@ -22,7 +22,6 @@
         }
 
         #container-overflow {
-            height: 100%;
             display: flex;
             justify-content: center
         }
@@ -172,6 +171,7 @@
         @media screen and (max-width: 600px) {
             #container-overflow {
                 overflow-x: auto;
+                justify-content: start;
             }
 
             table {
