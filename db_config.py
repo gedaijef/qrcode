@@ -7,8 +7,7 @@ def get_db_connection():
         host=os.getenv("HOST"),
         database=os.getenv("DATABASE"),
         user=os.getenv("USER"),
-        password=os.getenv("PASSWORD"),
-        port=os.getenv("PORT")
+        password=os.getenv("PASSWORD")
     )
     
     return conn
