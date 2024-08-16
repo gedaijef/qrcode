@@ -173,6 +173,12 @@
         return videoDevices; // Retornar os dispositivos de vídeo
       }
 
+      // Detectar quando a página está sendo fechada ou recarregada
+      window.addEventListener("beforeunload", function (event) {
+        // Chama a API para mudar o cookie
+        navigator.sendBeacon('/api/logout');
+    });
+
       async function startCamera(deviceId) {
         stopCamera(); // Parar qualquer câmera em execução
 

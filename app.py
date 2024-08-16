@@ -7,12 +7,41 @@ CORS(app)
 
 @app.route('/')
 def index():
-    return render_template('login.html')
+    # Aqui você pode adicionar lógica para verificar se o usuário está logado
+    login_status = request.cookies.get('login')
     
+    if login_status == 'sim':
+        return render_template('index.html')
+    else:
+        return render_template('login.html')
 
-@app.route('/index.html')
-def index2():
-    return render_template('index.html')
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    data = request.json
+    user = data.get('user')
+    password = data.get('password')
+
+    # Verificação das credenciais
+    valid_user = user == 'admin'
+    valid_password = password == 'admin'
+
+    if valid_user and valid_password:
+        response = jsonify({"status": "ok"})
+        response.set_cookie('login', 'sim')
+        return response
+    elif not valid_user and not valid_password:
+        return jsonify({"status": "erro", "error": "invalid_user_and_password"}), 401
+    elif not valid_user:
+        return jsonify({"status": "erro", "error": "invalid_user"}), 401
+    elif not valid_password:
+        return jsonify({"status": "erro", "error": "invalid_password"}), 401
+
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    response = jsonify({"status": "logged_out"})
+    response.set_cookie('login', 'não')
+    return response
 
 @app.route("/salvar", methods=["POST"])
 def salvar():

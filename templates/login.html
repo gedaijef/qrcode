@@ -149,7 +149,7 @@
             <div id="campoUser">
                 <input id="input-user" required="" type="text" name="text" autocomplete="off" class="input">
                 <label class="user-label">Usuário</label>
-                <p class="desabilitado" id="erro-user">Usário inválido</p>
+                <p class="desabilitado" id="erro-user">Usuário inválido</p>
             </div>
             <div id="campoSenha">
                 <input id="input-password" required="" type="password" name="text" autocomplete="off" class="input">
@@ -166,43 +166,50 @@
         // botão de login
         const bt_login = document.getElementById("login-button");
 
-        // verificando login
-        document.addEventListener("DOMContentLoaded", function (e) {
-            e.preventDefault()
-            const loginStatus = localStorage.getItem('login');
-            if (loginStatus === 'sim') {
-                window.open('https://camera-1n2b.onrender.com/index.html', "_self");
-            }
-        });
-
-        bt_login.addEventListener("click", (event) => {
-            event.preventDefault()
+        bt_login.addEventListener("click", async (event) => {
+            event.preventDefault();
+            
             const user = document.querySelector('#input-user').value;
             const password = document.querySelector('#input-password').value;
             const campoUser = document.querySelector('#erro-user');
             const campoSenha = document.querySelector('#erro-senha');
-            if (user.toLowerCase().trim() === 'admin' && password.toLowerCase().trim() === 'admin') {
-                localStorage.setItem('login', 'sim');
-                window.open('https://camera-1n2b.onrender.com/index.html', "_self");
-            }
-
-            else {
-                if (user.toLowerCase().trim() != 'admin') {
-                    campoUser.classList.remove('desabilitado');
-                    campoUser.classList.add('erro');
+            
+            // Ocultar todas as mensagens de erro antes de uma nova tentativa
+            campoUser.classList.add('desabilitado');
+            campoSenha.classList.add('desabilitado');
+        
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ user, password }),
+                });
+        
+                const result = await response.json();
+        
+                if (result.status === 'ok') {
+                    localStorage.setItem('login', 'sim');
+                    window.location.href = '/';  // Redirecionar para a raiz
+                } else {
+                    if (result.error === 'invalid_user') {
+                        campoUser.classList.remove('desabilitado');
+                        campoUser.classList.add('erro');
+                    }
+                    if (result.error === 'invalid_password') {
+                        campoSenha.classList.remove('desabilitado');
+                        campoSenha.classList.add('erro');
+                    }
+                    if (result.error === 'invalid_user_and_password') {
+                        campoUser.classList.remove('desabilitado');
+                        campoUser.classList.add('erro');
+                        campoSenha.classList.remove('desabilitado');
+                        campoSenha.classList.add('erro');
+                    }
                 }
-                else {
-                    campoUser.classList.add('desabilitado');
-                    campoUser.classList.remove('erro');
-                }
-                if (password.toLowerCase().trim() != 'admin') {
-                    campoSenha.classList.remove('desabilitado');
-                    campoSenha.classList.add('erro');
-                }
-                else {
-                    campoSenha.classList.add('desabilitado');
-                    campoSenha.classList.remove('erro');
-                }
+            } catch (error) {
+                console.error('Erro:', error);
             }
         });
 
