@@ -45,7 +45,7 @@ app.get('/presentes', async (req, res) => {
     const client = await pool.connect();
 
     try {
-        const presentes = await client.query(`select nome, c.nr_inscricao, turma, periodo, sala, professor 
+        const presentes = await client.query(`select nome, c.nr_inscricao, turma, dia, sala, professor 
                                                 from candidatos c join presenca p 
                                                 on c.nr_inscricao = p.nr_inscricao 
                                                 where data_presenca = current_date 
@@ -62,7 +62,7 @@ app.get('/ausentes', async (req, res) => {
     const client = await pool.connect();
 
     try {
-        const ausentes = await client.query(`SELECT c.nome, c.nr_inscricao, c.turma, c.periodo, c.sala, c.professor 
+        const ausentes = await client.query(`SELECT c.nome, c.nr_inscricao, c.turma, c.dia, c.sala, c.professor 
                                             FROM candidatos c LEFT JOIN presenca p
                                             ON c.nr_inscricao = p.nr_inscricao 
                                             AND p.data_presenca = CURRENT_DATE
