@@ -1,124 +1,134 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Germinare TECH</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            font-size: 25px;
-
-        }
-
-        body {
-            background-color: #fdfdfd;
-            color: #333;
-            height: 100vh;
-            display: flex;
-            align-items: start;
-            margin-top: 20%;
-            justify-content: center;
-        }
-
-        main {
-            padding: .5rem;
-            width: fit-content;
-            background-color: #CCD0E7;
-            border-radius: .6rem;
-            align-items: center;
-            display: flex;
-            flex-direction: column;
-        }
-
-        img {
-            height: 10rem;
-            border-radius: .6rem;
-        }
-
-        h1 {
-            text-align: center;
-            margin-top: .5rem;
-        }
-
-        p {
-            margin-top: .5rem;
-            font-size: .8rem;
-        }
-
-        @media only screen and (max-width: 600px) {
-            img {
-                height: 6rem;
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Germinare TECH</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+ 
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Inter', sans-serif;
+                font-size: 25px;
             }
-
+ 
+            body {
+                background-color: #fdfdfd;
+                color: #333;
+                height: 100vh;
+                padding: 1rem;
+            }
+ 
             h1 {
-                font-size: .7rem;
+                font-weight: 600;
+                background-color: #9ed1e7;
+                border-radius: .9rem;
+                padding-block: .5rem;
+                padding-inline: 1rem;
+                display: inline-block;
             }
-
+ 
             p {
-                font-size: .6rem;
+                margin-block: 1rem;
+                font-size: 1rem;
             }
-        }
 
-        @media only screen and (max-width: 350px) {
-            main {
-                margin-inline: 1rem;
+            strong {
+                font-size: 0.7rem;
             }
+ 
+            button {
+                outline: none;
+                border: none;
+                background-color: #9ed1e7;
+                border-radius: .9rem;
+                padding-block: .5rem;
+                padding-inline: 1rem;
+                font-weight: 450;
+                cursor: pointer;
+                transition: background-color .3s;
+            }
+ 
+            button:hover {
+                background-color: #87b4c7;
+            }
+
             img {
-                height: 4rem;
+                margin-left: 10px;
+                width: 40%;
+                display: flex;
+                margin: 10% auto
             }
-
-            h1 {
-                font-size: .6rem;
+ 
+            @media only screen and (max-width: 450px) {
+                h1 {
+                    font-size: .8rem;
+                }
+ 
+                p {
+                    font-size: .8rem;
+                }
+                button {
+                    font-size: .8rem;
+                }
             }
-
-            p {
-                font-size: .5rem;
+ 
+            @media only screen and (max-width: 200px) {
+                h1 {
+                    font-size: .7rem;
+                }
+                button {
+                    font-size: .6rem;
+                }
             }
+        </style>
+    </head>
+        <body>
+        <h1>Informações do Candidato</h1>
 
-        }
-    </style>
-</head>
-
-<body>
-    <main>
-        <section id="info">
-            <h1>Informações do Candidato</h1>
+            <img src="./tadinho.jpg" alt="tadinho">
             <p>
-                Nome: {base_html["Nome"][i]}
+                Inscrição: <strong>{base_orig["Inscrição"][i]}</strong>
             </p>
             <p>
-                Turma: {base_html["Turmas"][i]}
+                Nome: <strong>{base_orig["Nome"][i]}</strong>
             </p>
             <p>
-                Sala: {base_html["Sala"][i]}
+                Turma: <strong>{base_orig["Turma"][i]}</strong>
             </p>
             <p>
-                Professor: {base_html["Professor"][i]}
+                Sala: <strong>{base_orig["Sala"][i]}</strong>
+            </p>
+            <p>
+                Professor: <strong>{base_orig["Professor"][i]}</strong>
+            </p>
+            <p>
+                Dia e turno: <strong>{base_orig["Jantar"][i]}</strong>
             </p>
             <p id="notebook">
-                Notebook: {base_html["Notebook"][i]}
+                Notebook: <strong>{base_orig["Notebook"][i]}</strong>
             </p>
-        </section>
-    </main>
-
-    <script>
-        const notebook = document.getElementById('notebook')
-        if (notebook.innerText.toLowerCase().includes('sim')) {{
-            {{
-                notebook.style.color = 'green'
-            }}
-        }}
-        else {{
-            {{
-                notebook.style.color = 'red'
-            }}
-        }}
-    </script>
-</body>
-</html>
+           
+           <script>
+                const janta = document.getElementById('janta')
+                console.log(janta.innerText.toLowerCase())
+                if (janta.innerText.toLowerCase().includes('sim')) {{
+                    janta.style.color = 'green'
+                }}
+                else {{
+                    janta.style.color = 'red'
+                }}
+               
+                const notebook = document.getElementById('notebook')
+                if (notebook.innerText.toLowerCase().includes('sim')) {{
+                    notebook.style.color = 'green'
+                }}
+                else {{
+                    notebook.style.color = 'red'
+                }}
+            </script>
+        </body>
+        </html>
