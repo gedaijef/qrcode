@@ -55,7 +55,7 @@ def salvar():
         cur = conn.cursor()
         
         ## verificar se o aluno já marcou presença nessa data
-        cur.execute(f"SELECT * FROM presenca WHERE nr_inscricao = {nr_inscricao} AND data_presenca = {data_presenca}")
+        cur.execute(f"SELECT * FROM presenca WHERE nr_inscricao = {nr_inscricao} AND data_presenca = '{data_presenca}'")
         rows = cur.fetchall()
         print(rows)
         if len(rows) > 0:
