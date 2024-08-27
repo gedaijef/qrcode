@@ -20,10 +20,31 @@ def api_login():
     data = request.json
     user = data.get('user')
     password = data.get('password')
+    
+    try:
+        conn = get_db_connection() #conexão com o banco de dados
+        cur = conn.cursor()
+        
+        ## verificar se o aluno já marcou presença nessa data
+        cur.execute("SELECT usuario, senha FROM login")
+
+        row = cur.fetchone()
+        print(row)
+        if row:
+            user_banco = row[0]
+            password_banco = row[1]
+        else:
+            return jsonify({"status": "erro", "error": "Nenhum login encontrado"}), 404
+        
+        cur.close()
+        conn.close()
+    except Exception as e:
+        print("Erro: " + str(e))
+        return jsonify({"status": "erro", "error": str(e)}), 500
 
     # Verificação das credenciais
-    valid_user = user == 'admin'
-    valid_password = password == 'admin'
+    valid_user = user == user_banco
+    valid_password = password == password_banco
 
     if valid_user and valid_password:
         response = jsonify({"status": "ok"})
