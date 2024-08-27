@@ -1,0 +1,131 @@
+
+    <!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Germinare TECH</title>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Inter', sans-serif;
+                font-size: 25px;
+
+            }
+
+            body {
+                background-color: #fdfdfd;
+                color: #333;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            main {
+                padding: .5rem;
+                width: fit-content;
+                background-color: #CCD0E7;
+                border-radius: .6rem;
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+            }
+
+            img {
+                height: 10rem;
+                border-radius: .6rem;
+            }
+
+            h1 {
+                text-align: center;
+                margin-top: .5rem;
+            }
+
+            p {
+                margin-top: .5rem;
+                font-size: .8rem;
+            }
+
+            @media only screen and (max-width: 600px) {
+                img {
+                    height: 6rem;
+                }
+
+                h1 {
+                    font-size: .7rem;
+                }
+
+                p {
+                    font-size: .6rem;
+                }
+            }
+
+            @media only screen and (max-width: 350px) {
+                main {
+                    margin-inline: 1rem;
+                }
+                img {
+                    height: 4rem;
+                }
+
+                h1 {
+                    font-size: .6rem;
+                }
+
+                p {
+                    font-size: .5rem;
+                }
+
+            }
+        </style>
+    </head>
+
+    <body>
+        <main>
+            <section id="info">
+                <h1>Informações do Candidato</h1>
+                <p>
+                    Inscrição: G4THQRLN6P
+                </p>
+                <p>
+                    Nome: Graziela Victoria Costa de Souza
+                </p>
+                <p>
+                    Turma: Turma6
+                </p>
+                <p>
+                    Sala: S08
+                </p>
+                <p>
+                    Professor: Grilo
+                </p>
+                <p>
+                    Dia e turno: Segunda 2
+                </p>
+                <p id="notebook">
+                    Notebook: SIM
+                </p>
+            </section>
+        </main>
+
+        <script>
+            const notebook = document.getElementById('notebook')
+            if (notebook.innerText.toLowerCase().includes('sim')) {
+                {
+                    notebook.style.color = 'green'
+                }
+            }
+            else {
+                {
+                    notebook.style.color = 'red'
+                }
+            }
+        </script>
+    </body>
+    </html>
+        
