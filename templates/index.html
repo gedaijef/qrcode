@@ -129,8 +129,8 @@
             let data_presenca = saoPauloTime.toISOString().split('T')[0];  // Capturar a data atual
             let hora_atual = new Date()
             console.log(hora_atual)
-            console.log(hora_atual.split(" ")[0])
-            let hora = hora_atual.split(' ')[0];   // Capturar a hora atual
+            console.log(hora_atual.toTimeString().split(" ")[0])
+            let hora = hora_atual.toTimeString().split(' ')[0];   // Capturar a hora atual
 
             enviarDados(nr_inscricao, data_presenca, hora); // Enviar os dados para o servidor
             window.open(code.data); // Abrir o link do QR Code
