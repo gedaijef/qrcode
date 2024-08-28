@@ -115,9 +115,20 @@
 
           if (code && code.data !== lastCode) { // Se um QR Code for detectado e for diferente do último lido
             result.innerText = `Código QR detectado: ${code.data}`; // Exibir o QR Code detectado
+
+            // Captura a data e hora atual em UTC
+            const nowUTC = new Date();
+
+            // Calcula a diferença de fuso horário para São Paulo (UTC-3)
+            const saoPauloOffset = -3 * 60; // Offset em minutos
+
+            // Converte para o fuso horário de São Paulo
+            const saoPauloTime = new Date(nowUTC.getTime() + saoPauloOffset * 60 * 1000);
+
             let nr_inscricao = code.data.split("/").pop().split(".")[0]; // Extrair o número de inscrição do QR Code
-            let data_presenca = new Date(); // Capturar a data atual
-            let hora = data_presenca.toTimeString().split(" ")[0]; // Capturar a hora atual
+            let data_presenca = saoPauloTime.toISOString().split('T')[0];  // Capturar a data atual
+            let hora = saoPauloTime.toTimeString().split(' ')[0];   // Capturar a hora atual
+
             enviarDados(nr_inscricao, data_presenca, hora); // Enviar os dados para o servidor
             window.open(code.data); // Abrir o link do QR Code
             lastCode = code.data; // Atualizar o último código lido
