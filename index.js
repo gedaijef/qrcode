@@ -50,7 +50,7 @@ app.get('/presentes', async (req, res) => {
                                                 from candidatos c join presenca p 
                                                 on c.nr_inscricao = p.nr_inscricao 
                                                 where data_presenca = (CURRENT_DATE AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo')::date 
-                                                order by LPAD(SUBSTRING(t.turma, 6), 10, '0'), nome asc`);
+                                                order by LPAD(SUBSTRING(c.turma, 6), 10, '0'), nome asc`);
 
         res.render('candidatos_presentes.ejs', { presentes: presentes.rows });
         client.release();
@@ -68,7 +68,7 @@ app.get('/ausentes', async (req, res) => {
                                             ON c.nr_inscricao = p.nr_inscricao 
                                             AND p.data_presenca = (CURRENT_DATE AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo')::date 
                                             WHERE p.nr_inscricao IS NULL
-                                            order by LPAD(SUBSTRING(t.turma, 6), 10, '0'), nome asc
+                                            order by LPAD(SUBSTRING(c.turma, 6), 10, '0'), nome asc
         `);
 
         res.render('candidatos_ausentes.ejs', { ausentes: ausentes.rows });
