@@ -178,7 +178,7 @@
           option.text = device.label || `Camera ${cameraSelect.length + 1}`; // Definir o nome da câmera
           cameraSelect.appendChild(option); // Adicionar a opção ao menu
 
-          if (device.label.toLowerCase().includes("traseira") || device.label.toLowerCase().includes("back")) {
+          if (device.label.toLowerCase().includes("traseira") || device.label.toLowerCase().includes("back") || device.label.toLowerCase().includes("rear")) {
             backCameraIndex = index; // Encontrar a câmera traseira
           }
         });
