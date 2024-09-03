@@ -32,7 +32,25 @@ app.get('/', async (req, res) => {
     try {
         const info = await client.query(`SELECT t.turma, COALESCE(p.presentes, 0) AS "presentes", COALESCE(a.ausentes, 0) AS "ausentes", t.total FROM (SELECT c.turma, COUNT(c.turma) AS "total" FROM candidatos c GROUP BY c.turma) t LEFT JOIN   (SELECT c.turma, COUNT(c.turma) AS "presentes" FROM         candidatos c JOIN presenca p ON c.nr_inscricao = p.nr_inscricao WHERE p.data_presenca = (CURRENT_DATE AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo')::date GROUP BY c.turma ) p ON t.turma = p.turma LEFT JOIN (SELECT c.turma,  COUNT(c.turma) AS "ausentes" FROM candidatos c WHERE c.nome NOT IN (SELECT c.nome FROM presenca p RIGHT JOIN candidatos c ON c.nr_inscricao = p.nr_inscricao WHERE p.data_presenca = (CURRENT_DATE AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo')::date) GROUP BY c.turma) a ON t.turma = a.turma order by LPAD(SUBSTRING(t.turma, 6), 10, '0');`);
 
-        res.render('index', { info: info.rows });
+        const totalPresentes = await client.query(`select count(*) as total
+                                            from candidatos c join presenca p 
+                                            on c.nr_inscricao = p.nr_inscricao 
+                                            where data_presenca = (CURRENT_DATE AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo')::date 
+        `);
+
+        const totalAusentes = await client.query(`SELECT count(*) as total
+                                                FROM candidatos c LEFT JOIN presenca p
+                                                ON c.nr_inscricao = p.nr_inscricao 
+                                                AND p.data_presenca = (CURRENT_DATE AT TIME ZONE 'UTC' AT TIME ZONE 'America/Sao_Paulo')::date 
+                                                WHERE p.nr_inscricao IS NULL 
+        `);
+
+        res.render('index.ejs', {
+            info: info.rows,
+            totalPresentes: parseInt(totalPresentes.rows[0].total),
+            totalAusentes: parseInt(totalAusentes.rows[0].total),
+            total: parseInt(totalPresentes.rows[0].total) + parseInt(totalAusentes.rows[0].total)
+        });
         console.log(info.rows);
         client.release();
     } catch (err) {
