@@ -1,2 +1,6 @@
 CursoPython_sophie.xlsx
 CursoPython.xlsx
+.env
+requirements.txt
+testeInserção.ipynb
+node_modules/
